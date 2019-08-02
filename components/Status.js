@@ -1,11 +1,28 @@
-import React, { useState } from 'react';
-import { View, NetInfo, Platform, StatusBar, StyleSheet, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Platform, StatusBar, StyleSheet, Text } from 'react-native';
 import Constants from 'expo-constants';
+import NetInfo from '@react-native-community/netinfo';
 
 const statusHeight = Platform.OS === 'ios' ? Constants.statusBarHeight : 0;
 
 export default function Status() {
-  const [isConnected, setIsConnected] = useState(false);
+  const [isConnected, setIsConnected] = useState(true);
+
+  useEffect(() => {
+    // By moving this function inside the effect, we can clearly see the values it uses.
+    async function fetchNetworkStatus() {
+      NetInfo.addEventListener(state => {
+        setIsConnected(state.isConnected);
+      });
+
+      const isConnectedResult = await NetInfo.isConnected.fetch();
+
+      setIsConnected(isConnectedResult);
+    }
+
+    fetchNetworkStatus();
+  }, []);
+
   const backgroundColor = isConnected ? 'white' : 'red';
   const statusBar = (
     <StatusBar

@@ -22,5 +22,6 @@ module.exports = {
     'arrow-parens': 0,
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
+    'object-curly-newline': 0,
   },
 };
