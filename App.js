@@ -1,11 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Status from './components/Status';
+import MessageList from './components/MessageList';
+import { createImageMessage, createLocationMessage, createTextMessage } from './utils/MessageUtils';
 
 export default function App() {
-  const renderMessageList = () => <View style={styles.content}></View>;
+  const [messages, setMessages] = useState([
+    createImageMessage('https://picsum.photos/200'),
+    createTextMessage('World'),
+    createTextMessage('Hello'),
+    createLocationMessage({ latitude: 37.78825, longitude: -122.4324 }),
+  ]);
+
+  const renderMessageList = () => (
+    <View style={styles.content}>
+      <MessageList messages={messages} onPressMessage={handlePressMessage} />
+    </View>
+  );
   const renderInputMethodEditor = () => <View style={styles.inputMethodEditor}></View>;
   const renderToolbar = () => <View style={styles.toolbar}></View>;
+  const handlePressMessage = () => {};
 
   return (
     <View style={styles.container}>
