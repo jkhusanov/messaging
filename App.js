@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, Alert, Image, TouchableHighlight } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, BackHandler, View, Alert, Image, TouchableHighlight } from 'react-native';
 import Status from './components/Status';
 import MessageList from './components/MessageList';
+import Toolbar from './components/Toolbar';
 import { createImageMessage, createLocationMessage, createTextMessage } from './utils/MessageUtils';
 
 export default function App() {
@@ -12,6 +13,52 @@ export default function App() {
     createLocationMessage({ latitude: 37.78825, longitude: -122.4324 }),
   ]);
   const [fullscreenImageId, setFullscreenImageId] = useState(null);
+  const [isInputFocused, setIsInputFocused] = useState(false);
+  useEffect(() => {
+    const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (fullscreenImageId) {
+        dismissFullscreenImage();
+        // We return true to indicate that we shouldn’t exit the app.
+        return true;
+      }
+      // If we’re not showing a fullscreen image, we return false. Because no other handlers should be registered, this will allow for the default back button behavior (exiting the app).
+      return false;
+    });
+
+    // Cleanup
+    return () => {
+      subscription.remove();
+    };
+  });
+
+  const handlePressToolbarCamera = () => {
+    // ...
+  };
+  const handlePressToolbarLocation = () => {
+    // ...
+  };
+
+  const handleChangeFocus = isFocused => {
+    setIsInputFocused(isFocused);
+  };
+
+  const handleSubmit = text => {
+    setMessages([createTextMessage(text), ...messages]);
+  };
+
+  const renderToolbar = () => {
+    return (
+      <View style={styles.toolbar}>
+        <Toolbar
+          isFocused={isInputFocused}
+          onSubmit={handleSubmit}
+          onChangeFocus={handleChangeFocus}
+          onPressCamera={handlePressToolbarCamera}
+          onPressLocation={handlePressToolbarLocation}
+        />
+      </View>
+    );
+  };
 
   const renderMessageList = () => (
     <View style={styles.content}>
@@ -39,7 +86,6 @@ export default function App() {
   };
 
   const renderInputMethodEditor = () => <View style={styles.inputMethodEditor}></View>;
-  const renderToolbar = () => <View style={styles.toolbar}></View>;
   const handlePressMessage = ({ id, type }) => {
     switch (type) {
       case 'text':
@@ -63,6 +109,7 @@ export default function App() {
         break;
       case 'image':
         setFullscreenImageId(id);
+        setIsInputFocused(false);
         break;
       default:
         break;
