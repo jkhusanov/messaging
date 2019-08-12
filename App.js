@@ -3,6 +3,7 @@ import { StyleSheet, BackHandler, View, Alert, Image, TouchableHighlight } from 
 import Status from './components/Status';
 import MessageList from './components/MessageList';
 import Toolbar from './components/Toolbar';
+import ImageGrid from './components/ImageGrid';
 import { createImageMessage, createLocationMessage, createTextMessage } from './utils/MessageUtils';
 
 export default function App() {
@@ -91,7 +92,11 @@ export default function App() {
     );
   };
 
-  const renderInputMethodEditor = () => <View style={styles.inputMethodEditor}></View>;
+  const renderInputMethodEditor = () => (
+    <View style={styles.inputMethodEditor}>
+      <ImageGrid />
+    </View>
+  );
   const handlePressMessage = ({ id, type }) => {
     switch (type) {
       case 'text':

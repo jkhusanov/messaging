@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 export default function Grid(props) {
   const renderGridItem = info => {
+    const { index } = info;
     const { numColumns, itemMargin, renderItem } = props;
     const { width } = Dimensions.get('window');
 
