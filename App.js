@@ -35,6 +35,11 @@ export default function App() {
   const handlePressToolbarCamera = () => {
     // ...
   };
+
+  const handlePressImage = uri => {
+    setMessages([createImageMessage(uri), ...messages]);
+  };
+
   const handlePressToolbarLocation = () => {
     navigator.geolocation.getCurrentPosition(position => {
       const {
@@ -94,7 +99,7 @@ export default function App() {
 
   const renderInputMethodEditor = () => (
     <View style={styles.inputMethodEditor}>
-      <ImageGrid />
+      <ImageGrid onPressImage={handlePressImage} />
     </View>
   );
   const handlePressMessage = ({ id, type }) => {

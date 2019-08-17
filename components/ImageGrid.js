@@ -8,18 +8,12 @@ import Grid from './Grid';
 
 const keyExtractor = ({ uri }) => uri;
 
-const renderItem = ({ item: { uri }, size, marginTop, marginLeft }) => {
-  const style = { width: size, height: size, marginLeft, marginTop };
-
-  return <Image source={{ uri }} style={style} />;
-};
-
-export default function ImageGrid() {
-  // const [loading, setLoading] = useState(false);
+export default function ImageGrid(props) {
   const [images, setImages] = useState([]);
   const [cursor, setCursor] = useState(null);
   let loading = false;
-  // let cursor = null;
+  const { onPressImage } = props;
+
   useEffect(() => {
     async function getImages() {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -69,6 +63,21 @@ export default function ImageGrid() {
     getImages(cursor);
   };
 
+  // eslint-disable-next-line react/prop-types
+  const renderItem = ({ item: { uri }, size, marginTop, marginLeft }) => {
+    const style = { width: size, height: size, marginLeft, marginTop };
+    return (
+      <TouchableOpacity
+        key={uri}
+        activeOpacity={0.75}
+        onPress={() => onPressImage(uri)}
+        style={style}
+      >
+        <Image source={{ uri }} style={styles.image} />
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <Grid
       data={images}
@@ -91,13 +100,4 @@ ImageGrid.propTypes = {
 
 ImageGrid.defaultProps = {
   onPressImage: () => {},
-};
-
-renderItem.propTypes = {
-  item: PropTypes.shape({
-    uri: PropTypes.string.isRequired,
-  }).isRequired,
-  size: PropTypes.number.isRequired,
-  marginTop: PropTypes.number.isRequired,
-  marginLeft: PropTypes.number.isRequired,
 };
