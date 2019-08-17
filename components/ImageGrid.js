@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+/* eslint-disable camelcase */
+import React, { useState, useEffect } from 'react';
 import { CameraRoll, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { Permissions } from 'expo';
+import * as Permissions from 'expo-permissions';
 import PropTypes from 'prop-types';
 
 import Grid from './Grid';
@@ -14,14 +15,68 @@ const renderItem = ({ item: { uri }, size, marginTop, marginLeft }) => {
 };
 
 export default function ImageGrid() {
-  const [images, setImages] = useState([
-    { uri: 'https://picsum.photos/600/600?image=10' },
-    { uri: 'https://picsum.photos/600/600?image=20' },
-    { uri: 'https://picsum.photos/600/600?image=30' },
-    { uri: 'https://picsum.photos/600/600?image=40' },
-  ]);
+  // const [loading, setLoading] = useState(false);
+  const [images, setImages] = useState([]);
+  const [cursor, setCursor] = useState(null);
+  let loading = false;
+  // let cursor = null;
+  useEffect(() => {
+    async function getImages() {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== 'granted') {
+        console.log('Camera roll permission denied');
+        return;
+      }
+      const results = await CameraRoll.getPhotos({
+        first: 20,
+        assetType: 'Photos',
+        groupTypes: 'All',
+      });
+      const {
+        edges,
+        page_info: { has_next_page, end_cursor },
+      } = results;
+      const loadedImages = edges.map(item => item.node.image);
 
-  return <Grid data={images} renderItem={renderItem} keyExtractor={keyExtractor} />;
+      setImages(loadedImages);
+      setCursor(has_next_page ? end_cursor : null);
+    }
+    getImages();
+  }, []);
+
+  const getImages = async after => {
+    if (loading) return;
+    loading = true;
+    const results = await CameraRoll.getPhotos({
+      first: 20,
+      after,
+      assetType: 'Photos',
+      groupTypes: 'All',
+    });
+    const {
+      edges,
+      page_info: { has_next_page, end_cursor },
+    } = results;
+    const loadedImages = edges.map(item => item.node.image);
+
+    setImages(images.concat(loadedImages));
+    loading = false;
+    setCursor(has_next_page ? end_cursor : null);
+  };
+
+  const getNextImages = () => {
+    if (!cursor) return;
+    getImages(cursor);
+  };
+
+  return (
+    <Grid
+      data={images}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      onEndReached={getNextImages}
+    />
+  );
 }
 
 const styles = StyleSheet.create({
