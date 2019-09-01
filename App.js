@@ -6,7 +6,12 @@ import Toolbar from './components/Toolbar';
 import ImageGrid from './components/ImageGrid';
 import { createImageMessage, createLocationMessage, createTextMessage } from './utils/MessageUtils';
 
+import KeyboardState from './components/KeyboardState';
+import MeasureLayout from './components/MeasureLayout';
+import MessagingContainer, { INPUT_METHOD } from './components/MessagingContainer';
+
 export default function App() {
+  const [inputMethod, setInputMethod] = useState(INPUT_METHOD.NONE);
   const [messages, setMessages] = useState([
     createImageMessage('https://picsum.photos/id/1043/500/500'),
     createTextMessage('World'),
@@ -32,8 +37,13 @@ export default function App() {
     };
   });
 
+  const handleChangeInputMethod = changedInputMethod => {
+    setInputMethod(changedInputMethod);
+  };
+
   const handlePressToolbarCamera = () => {
-    // ...
+    setIsInputFocused(false);
+    setInputMethod(INPUT_METHOD.CUSTOM);
   };
 
   const handlePressImage = uri => {
@@ -135,9 +145,23 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Status />
-      {renderMessageList()}
-      {renderToolbar()}
-      {renderInputMethodEditor()}
+      <MeasureLayout>
+        {layout => (
+          <KeyboardState layout={layout}>
+            {keyboardInfo => (
+              <MessagingContainer
+                {...keyboardInfo}
+                inputMethod={inputMethod}
+                onChangeInputMethod={handleChangeInputMethod}
+                renderInputMethodEditor={renderInputMethodEditor}
+              >
+                {renderMessageList()}
+                {renderToolbar()}
+              </MessagingContainer>
+            )}
+          </KeyboardState>
+        )}
+      </MeasureLayout>
       {renderFullscreenImage()}
     </View>
   );

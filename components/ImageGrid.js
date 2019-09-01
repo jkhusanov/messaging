@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
-import { CameraRoll, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { CameraRoll, Image, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import PropTypes from 'prop-types';
 
@@ -21,11 +21,17 @@ export default function ImageGrid(props) {
         console.log('Camera roll permission denied');
         return;
       }
-      const results = await CameraRoll.getPhotos({
-        first: 20,
-        assetType: 'Photos',
-        groupTypes: 'All',
-      });
+      const results =
+        Platform.OS === 'ios'
+          ? await CameraRoll.getPhotos({
+              first: 20,
+              assetType: 'Photos',
+              groupTypes: 'All',
+            })
+          : await CameraRoll.getPhotos({
+              first: 20,
+              assetType: 'Photos',
+            });
       const {
         edges,
         page_info: { has_next_page, end_cursor },
@@ -41,12 +47,19 @@ export default function ImageGrid(props) {
   const getImages = async after => {
     if (loading) return;
     loading = true;
-    const results = await CameraRoll.getPhotos({
-      first: 20,
-      after,
-      assetType: 'Photos',
-      groupTypes: 'All',
-    });
+    const results =
+      Platform.OS === 'ios'
+        ? await CameraRoll.getPhotos({
+            first: 20,
+            after,
+            assetType: 'Photos',
+            groupTypes: 'All',
+          })
+        : await CameraRoll.getPhotos({
+            first: 20,
+            after,
+            assetType: 'Photos',
+          });
     const {
       edges,
       page_info: { has_next_page, end_cursor },
