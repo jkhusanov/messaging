@@ -28,8 +28,8 @@ It's a simple app from the third chapter of the book.
 
 ## [Try it on Expo](https://exp.host/@jkhusanov/messaging)
 
-|                                             |                                             |     |
-| :-----------------------------------------: | :-----------------------------------------: | :-: |
+|                                             |                                             |
+| :-----------------------------------------: | :-----------------------------------------: |
 | <img width="250" src="./screenshots/1.png"> | <img width="250" src="./screenshots/2.png"> |
 
 ## Getting started
