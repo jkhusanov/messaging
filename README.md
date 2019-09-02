@@ -1,13 +1,13 @@
-# Image feed CHANGE README!!!
+# Messaging app
 
-<p align="center">
+<!-- <p align="center">
   <a href="https://www.fullstackreact.com/react-native/">
-    <img alt="Image feed" src="assets/icon.png" width="250">
+    <img alt="Messaging" src="assets/icon.png" width="250">
   </a>
-</p>
+</p> -->
 
 <h3 align="center">
-  Image feed
+  Messaging app
 </h3>
   
   <a href="https://www.fullstackreact.com/react-native/">
@@ -26,16 +26,17 @@ It's a simple app from the third chapter of the book.
 
 ## Preview
 
-## [Try it on Expo](https://exp.host/@jkhusanov/Image-feed)
+## [Try it on Expo](https://exp.host/@jkhusanov/messaging)
 
 <img width="250" src="./screenshots/1.png">
+<img width="250" src="./screenshots/2.png">
 
 ## Getting started
 
 ```
-git clone https://github.com/jkhusanov/image-feed.git
+git clone https://github.com/jkhusanov/messaging.git
 
-cd image-feed
+cd messaging
 
 yarn install
 
@@ -46,4 +47,4 @@ i
 
 ## Feedback
 
-In case you have any feedback or questions, feel free to open a new issue on this [repo](https://github.com/jkhusanov/image-feed) or reach out to me [**@jkhusanov**](https://github.com/jkhusanov) on Github.
+In case you have any feedback or questions, feel free to open a new issue on this [repo](https://github.com/jkhusanov/messaging) or reach out to me [**@jkhusanov**](https://github.com/jkhusanov) on Github.
